@@ -1,0 +1,7 @@
+[package]
+name = "solitaire"
+version = "0.1.0"
+authors = ["Ben Brunton <benbrunton@hotmail.com>"]
+
+[dependencies]
+colored = "1.1"
