@@ -1,5 +1,7 @@
 use std::fmt;
 use colored::*;
+use rand;
+use rand::Rng;
 
 #[derive(Clone, Debug, PartialEq, )]
 pub enum Suit{
@@ -35,19 +37,19 @@ pub enum Rank{
 impl fmt::Display for Rank{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let display = match self {
-            &Rank::Ace      => "A",
-            &Rank::Two      => "2",
-            &Rank::Three    => "3",
-            &Rank::Four     => "4",
-            &Rank::Five     => "5",
-            &Rank::Six      => "6",
-            &Rank::Seven    => "7",
-            &Rank::Eight    => "8",
-            &Rank::Nine     => "9",
+            &Rank::Ace      => " A",
+            &Rank::Two      => " 2",
+            &Rank::Three    => " 3",
+            &Rank::Four     => " 4",
+            &Rank::Five     => " 5",
+            &Rank::Six      => " 6",
+            &Rank::Seven    => " 7",
+            &Rank::Eight    => " 8",
+            &Rank::Nine     => " 9",
             &Rank::Ten      => "10",
-            &Rank::Jack     => "J",
-            &Rank::Queen    => "Q",
-            &Rank::King     => "K",
+            &Rank::Jack     => " J",
+            &Rank::Queen    => " Q",
+            &Rank::King     => " K",
         };
         write!(f, "{}", display)
     }
@@ -85,6 +87,7 @@ impl fmt::Display for Card {
     }
 }
 
+
 pub struct Deck(Vec<Card>);
 
 impl Deck {
@@ -99,13 +102,27 @@ impl Deck {
         }
         Deck(cards)
     }
-    // fn deal(&mut self) -> Option<Card> {
-    //     self.0.pop()
-    // }
+    
+    pub fn deal(&mut self) -> Option<Card> {
+        self.0.pop()
+    }
  
-    // fn shuffle(&mut self) {
-    //     rand::thread_rng().shuffle(&mut self.0)
-    // }
+    pub fn shuffle(&mut self) {
+        let mut rng = rand::thread_rng();
+        rng.shuffle(&mut self.0)
+    }
+    
+    pub fn take(&mut self, n: usize) -> Vec<Card>{
+    
+        let mut temp_stack:Vec<Card> = Vec::new();
+        while temp_stack.len() < n {
+            if let Some(card) = self.deal(){
+                temp_stack.push(card);
+            }
+        }
+        
+        temp_stack
+    }
 }
  
 impl fmt::Display for Deck {
@@ -114,5 +131,23 @@ impl fmt::Display for Deck {
             writeln!(f, "{}", card);
         }
         write!(f, "")
+    }
+}
+
+pub struct Stack(Vec<Card>);
+
+impl Stack {
+
+    pub fn new() -> Stack{
+        Stack(Vec::new())
+    }
+    pub fn count(&self) -> usize {
+        self.0.len()
+    }
+    
+    pub fn add_to_top(&mut self, cards: Vec<Card>){
+        for card in cards.iter() {
+            self.0.push(card.clone());
+        }
     }
 }

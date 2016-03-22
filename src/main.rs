@@ -1,12 +1,16 @@
+extern crate rand;
 extern crate colored;
 
 mod card;
+mod game;
 
-use card::*;
+use game::*;
+
 
 fn main() {
-    println!("Hello, world!");
     
-    let deck = Deck::new();
-    println!("{}", deck);
+    let mut game = Game::new();
+    
+    game.start();
+
 }
