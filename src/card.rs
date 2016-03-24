@@ -151,7 +151,27 @@ impl Stack {
         }
     }
     
-    pub fn top_card(&self) -> Card{
-        self.0[self.0.len() - 1].clone()
+    pub fn show(&self, n: usize) -> Option<Card>{
+        if self.0.len() < n {
+            None
+        }else{
+            Some(self.0[self.0.len() - 1].clone())
+        }
+    }
+    
+    pub fn take(&mut self, n: usize) -> Vec<Card>{
+    
+        let mut temp_stack:Vec<Card> = Vec::new();
+        while temp_stack.len() < n {
+            if let Some(card) = self.deal(){
+                temp_stack.push(card);
+            }
+        }
+        
+        temp_stack
+    }
+    
+    pub fn deal(&mut self) -> Option<Card> {
+        self.0.pop()
     }
 }

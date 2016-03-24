@@ -1,13 +1,13 @@
 
 use colored::*;
 use card::*;
-use std::io;
 
 pub struct Game{
-    deck:       Deck,
-    tableau:    Vec<Stack>,
-    target:     Vec<Stack>,
-    stack:      Stack
+    deck:           Deck,
+    tableau:        Vec<Stack>,
+    target:         Vec<Stack>,
+    open_tableau:   Vec<Stack>,
+    stack:          Stack
 }
 
 impl Game{
@@ -18,12 +18,14 @@ impl Game{
         
         let tableau = (0..7).map(|_| Stack::new()).collect();
         let target = (0..4).map(|_| Stack::new()).collect();
+        let open_tableau = (0..7).map(|_| Stack::new()).collect();
         
         Game{
-            deck:       deck,
-            tableau:    tableau,
-            target:     target,
-            stack:      Stack::new()
+            deck:           deck,
+            tableau:        tableau,
+            open_tableau:   open_tableau,
+            target:         target,
+            stack:          Stack::new()
         }
     }
 
@@ -44,6 +46,13 @@ impl Game{
             }
             stacks_to_deal = stacks_to_deal - 1;
         }
+        
+        
+        for n in 0..(tableau_len){
+            let card = self.tableau[n].take(1);
+            self.open_tableau[n].add_to_top(card);
+        }
+        
         
         self.display_board();
         
@@ -73,9 +82,13 @@ impl Game{
         // targets
         let target = &self.target.iter().map(|stack|
             if stack.count() > 0 {
-                stack.top_card().to_string()
+                if let Some(card) = stack.show(stack.count() - 1){
+                    card.to_string()
+                }else{
+                    " ".to_string()
+                }
             } else {
-                String::from(" ")
+                " ".to_string()
             }
         ).collect::<Vec<String>>();
         
@@ -92,5 +105,20 @@ impl Game{
       println!("\n\t<1>\t<2>\t<3>\t<4>\t<5>\t<6>\t<7>");
         println!("\t[{}]\t[{}]\t[{}]\t[{}]\t[{}]\t[{}]\t[{}]", stacks[0], stacks[1], stacks[2], stacks[3],
             stacks[4], stacks[5], stacks[6]);
+            
+            
+        let stacks = &self.open_tableau.iter().map(|stack|
+            if let Some(card) = stack.show(0){
+                card.to_string()
+            }else{
+                "  ".to_string()
+            }
+        ).collect::<Vec<String>>();
+        // cards
+        println!("\t{}\t{}\t{}\t{}\t{}\t{}\t{}", stacks[0], stacks[1], stacks[2],
+            stacks[3], stacks[4], stacks[5], stacks[6]);
+            
+            
+        println!("\n");
     }
 }
