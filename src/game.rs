@@ -65,9 +65,13 @@ impl Game{
         
         // stack
         let stack = if self.stack.count() > 0 {
-            "1, 2, 3"
+            if let Some(card) = self.stack.show(self.stack.count() - 1){
+                card.to_string()
+            }else{
+                "  ".to_string()
+            }
         } else {
-            ""
+            "".to_string()
         };
         
         
@@ -114,5 +118,12 @@ impl Game{
             
             
         println!("\n");
+    }
+    
+    pub fn deal(&mut self){
+        self.round = self.round + 1;
+        
+        let card = self.deck.take(3);
+        self.stack.add_to_top(card);
     }
 }

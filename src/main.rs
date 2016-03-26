@@ -49,6 +49,10 @@ fn show_instructions() {
 fn process_move(input:String, game:&mut Game) -> bool{
     match &*input {
         "q\n"   => false,
+        "h\n"   => {
+            game.deal();
+            true
+        },
         _       => {
             println!("\n\n{}", "Invalid move!".red().bold());
             true
