@@ -7,7 +7,8 @@ pub struct Game{
     tableau:        Vec<Stack>,
     target:         Vec<Stack>,
     open_tableau:   Vec<Stack>,
-    stack:          Stack
+    stack:          Stack,
+    round:          u16
 }
 
 impl Game{
@@ -25,7 +26,8 @@ impl Game{
             tableau:        tableau,
             open_tableau:   open_tableau,
             target:         target,
-            stack:          Stack::new()
+            stack:          Stack::new(),
+            round:          1
         }
     }
 
@@ -55,19 +57,9 @@ impl Game{
         
         
         self.display_board();
-        
-        // let mut input = String::new();
-
-    // match io::stdin().read_line(&mut input) {
-    //     Ok(n) => {
-    //         println!("{} bytes read", n);
-    //         println!("{}", input);
-    //     }
-    //     Err(error) => println!("error: {}", error),
-    // }
     }
     
-    fn display_board(&self){
+    pub fn display_board(&self){
         // deck
         let deck = "?".blue();
         
@@ -92,7 +84,9 @@ impl Game{
             }
         ).collect::<Vec<String>>();
         
-        println!("<h>\t<s>\t\t\t<a>\t<b>\t<c>\t<d>");
+        println!("\n\nRound {}:", self.round);
+        
+        println!("\n\n<h>\t<s>\t\t\t<a>\t<b>\t<c>\t<d>");
         
         println!("[{}]\t{}\t\t\t[{}]\t[{}]\t[{}]\t[{}]", deck, stack, target[0], target[1], target[2], target[3]);
         
