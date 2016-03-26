@@ -27,7 +27,7 @@ impl Game{
             open_tableau:   open_tableau,
             target:         target,
             stack:          Stack::new(),
-            round:          1
+            round:          0
         }
     }
 
@@ -84,7 +84,7 @@ impl Game{
             }
         ).collect::<Vec<String>>();
         
-        println!("\n\nRound {}:", self.round);
+        println!("\n\n{}: {}", "Moves".bold(), self.round);
         
         println!("\n\n<h>\t<s>\t\t\t<a>\t<b>\t<c>\t<d>");
         

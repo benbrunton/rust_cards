@@ -7,6 +7,7 @@ mod game;
 use std::io;
 
 use game::*;
+use colored::*;
 
 
 fn main() {
@@ -47,8 +48,11 @@ fn show_instructions() {
 // todo - apply moves
 fn process_move(input:String, game:&mut Game) -> bool{
     match &*input {
-        "q\n"     => false,
-        _       => true
+        "q\n"   => false,
+        _       => {
+            println!("\n\n{}", "Invalid move!".red().bold());
+            true
+        }
     }
     
 }
