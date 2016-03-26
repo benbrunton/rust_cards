@@ -34,15 +34,21 @@ fn next_round(game:&mut Game) -> bool{
 }
 
 fn show_instructions() {
-    println!("Move from <a> to <b> :");
-    println!("a-b");
-    println!("Deal from main stack:");
-    println!("h");
+    println!("Move from <1> to <a> : 1-a");
+    println!("Deal from main stack: h");
+    println!("Exit: q");
     
     println!("\nyour move:");
 }
 
+
+// todo - process different inputs
+// todo - validate moves
+// todo - apply moves
 fn process_move(input:String, game:&mut Game) -> bool{
-    // match &*input
-    true
+    match &*input {
+        "q\n"     => false,
+        _       => true
+    }
+    
 }
