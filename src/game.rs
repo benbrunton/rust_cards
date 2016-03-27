@@ -178,17 +178,12 @@ impl Game{
         // todo - clean this horrible shit up
         if let Some(target_card) = target_stack.show(target_stack.count() - 1) {
         
-            println!("{}", target_card);
             if let Some(previous_rank) = target_card.previous_rank() {
-                println!("{} expects a {:?} {:?}", target_card, target_card.alternate_colour(), previous_rank);
                 
                 if let Some(source_card) = source_stack.show(source_stack.count() - 1){
                     if source_card.colour == target_card.alternate_colour() && source_card.rank == previous_rank {
                         let card = source_stack.take(1);
-                        println!("moving {}", card[0]);
-                        println!("{:?}", target_stack);
                         target_stack.add_to_top(card);
-                        println!("{:?}", target_stack);
                         
                         match &*target {
                             "a" => {self.target[0] = target_stack;},
@@ -217,8 +212,6 @@ impl Game{
                             "7" => {self.open_tableau[6] = source_stack;},
                             _   => {}
                         }
-                        
-                        println!("{:?}", self.open_tableau);
                     }
                 }
             }
