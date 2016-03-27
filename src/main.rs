@@ -1,5 +1,6 @@
 extern crate rand;
 extern crate colored;
+extern crate regex;
 
 mod card;
 mod game;
@@ -8,6 +9,7 @@ use std::io;
 
 use game::*;
 use colored::*;
+use regex::Regex;
 
 
 fn main() {
@@ -47,14 +49,30 @@ fn show_instructions() {
 // todo - validate moves
 // todo - apply moves
 fn process_move(input:String, game:&mut Game) -> bool{
+    let move_re = Regex::new(r"^(\w)-(\w)\n$").unwrap();
+    let deal_re = Regex::new(r"^(\d)\n$").unwrap();
+
     match &*input {
         "q\n"   => false,
         "h\n"   => {
             game.deal();
             true
         },
-        _       => {
+        x if move_re.is_match(x) => {
+            for cap in move_re.captures_iter(x) {
+                game.move_card(cap.at(1).unwrap(), cap.at(2).unwrap());
+            }
+            true
+        },
+        x if deal_re.is_match(x) => {
+            for cap in deal_re.captures_iter(x) {
+                game.deal_stack(cap.at(1).unwrap());
+            }
+            true
+        },
+        x       => {
             println!("\n\n{}", "Invalid move!".red().bold());
+            println!("{:?}", x);
             true
         }
     }

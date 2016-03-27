@@ -135,4 +135,111 @@ impl Game{
             self.deck.add_to_top(cards);
         }
     }
+    
+    pub fn move_card(&mut self, source:&str, target:&str){
+        
+        println!("Checking move {} to {}", source, target);
+        
+        let empty_target_stack = Stack::new();
+        let empty_source_stack = Stack::new();
+        
+        let mut target_stack: Stack = match self.get_target_stack(target){
+            Some(target_stack)  => target_stack,
+            None                => empty_target_stack
+        };
+        
+        let mut source_stack: Stack = match self.get_source_stack(source){
+            Some(source_stack)  => source_stack,
+            None                => empty_source_stack
+        };
+
+
+
+        // todo - clean this horrible shit up
+        if let Some(target_card) = target_stack.show(target_stack.count() - 1) {
+        
+            println!("{}", target_card);
+            if let Some(previous_rank) = target_card.previous_rank() {
+                println!("{} expects a {:?} {:?}", target_card, target_card.alternate_colour(), previous_rank);
+                
+                if let Some(source_card) = source_stack.show(source_stack.count() - 1){
+                    if source_card.colour == target_card.alternate_colour() && source_card.rank == previous_rank {
+                        let card = source_stack.take(1);
+                        target_stack.add_to_top(card);
+                        
+                        match &*target {
+                            "a" => {self.target[0] = target_stack;},
+                            "b" => {self.target[1] = target_stack;},
+                            "c" => {self.target[2] = target_stack;},
+                            "d" => {self.target[3] = target_stack;},
+                            "1" => {self.open_tableau[0] = target_stack;},
+                            "2" => {self.open_tableau[1] = target_stack;},
+                            "3" => {self.open_tableau[2] = target_stack;},
+                            "4" => {self.open_tableau[3] = target_stack;},
+                            "5" => {self.open_tableau[4] = target_stack;},
+                            "6" => {self.open_tableau[5] = target_stack;},
+                            "7" => {self.open_tableau[6] = target_stack;},
+                            _   => {}
+                        }
+                        
+                        
+                        match &*source {
+                            "s" => {self.stack = source_stack;},
+                            "1" => {self.open_tableau[0] = source_stack;},
+                            "2" => {self.open_tableau[1] = source_stack;},
+                            "3" => {self.open_tableau[2] = source_stack;},
+                            "4" => {self.open_tableau[3] = source_stack;},
+                            "5" => {self.open_tableau[4] = source_stack;},
+                            "6" => {self.open_tableau[5] = source_stack;},
+                            "7" => {self.open_tableau[6] = source_stack;},
+                            _   => {}
+                        }
+                        
+                    }
+                }
+            }
+        }
+
+    }
+    
+    pub fn deal_stack(&mut self, source:&str){
+        println!("Checking stack {}", source);
+    }
+    
+    fn get_target_stack(&self, target:&str)->Option<Stack>{
+        let open_tableau = &self.open_tableau;
+        let target_ref = &self.target;
+        match &*target {
+            "a" => Some(target_ref[0].clone()),
+            "b" => Some(target_ref[1].clone()),
+            "c" => Some(target_ref[2].clone()),
+            "d" => Some(target_ref[3].clone()),
+            "1" => Some(open_tableau[0].clone()),
+            "2" => Some(open_tableau[1].clone()),
+            "3" => Some(open_tableau[2].clone()),
+            "4" => Some(open_tableau[3].clone()),
+            "5" => Some(open_tableau[4].clone()),
+            "6" => Some(open_tableau[5].clone()),
+            "7" => Some(open_tableau[6].clone()),
+            _   => None
+        }
+        
+    }
+    
+    fn get_source_stack(&self, source:&str)->Option<Stack>{
+        
+        let open_tableau = &self.open_tableau;
+        
+        match &*source {
+            "s" => Some(self.stack.clone()),
+            "1" => Some(open_tableau[0].clone()),
+            "2" => Some(open_tableau[1].clone()),
+            "3" => Some(open_tableau[2].clone()),
+            "4" => Some(open_tableau[3].clone()),
+            "5" => Some(open_tableau[4].clone()),
+            "6" => Some(open_tableau[5].clone()),
+            "7" => Some(open_tableau[6].clone()),
+            _   => None
+        }
+    }
 }

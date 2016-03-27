@@ -3,7 +3,7 @@ use colored::*;
 use rand;
 use rand::Rng;
 
-#[derive(Clone, Debug, PartialEq, )]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Suit{
     Diamonds,
     Clubs,
@@ -29,7 +29,7 @@ pub enum Colour{
     Black
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Rank{
     Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King
 }
@@ -58,9 +58,9 @@ impl fmt::Display for Rank{
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Card{
-    rank: Rank,
-    suit: Suit,
-    colour: Colour
+    pub rank: Rank,
+    pub suit: Suit,
+    pub colour: Colour
 }
 
 impl Card {
@@ -72,6 +72,18 @@ impl Card {
             _               => Colour::Black
         };
         Card{suit: suit, rank: rank, colour: colour}
+    }
+    
+    pub fn previous_rank(&self) -> Option<Rank>{
+        previous_rank(&self.rank)
+    }
+    
+    pub fn alternate_colour(&self) -> Colour{
+        if self.colour == Colour::Red {
+            Colour::Black
+        } else {
+            Colour::Red
+        }
     }
 }
 
@@ -144,6 +156,7 @@ impl fmt::Display for Deck {
     }
 }
 
+#[derive(Clone, Debug, PartialEq)]
 pub struct Stack(Vec<Card>);
 
 impl Stack {
@@ -163,7 +176,7 @@ impl Stack {
     }
     
     pub fn show(&self, n: usize) -> Option<Card>{
-        if self.0.len() < n {
+        if self.0.len() <= n {
             None
         }else{
             Some(self.0[self.0.len() - 1].clone())
@@ -184,5 +197,23 @@ impl Stack {
     
     pub fn deal(&mut self) -> Option<Card> {
         self.0.pop()
+    }
+}
+
+fn previous_rank(rank:&Rank) -> Option<Rank> {
+    match rank {
+        &Rank::Ace      => None,
+        &Rank::Two      => Some(Rank::Ace),
+        &Rank::Three    => Some(Rank::Two),
+        &Rank::Four     => Some(Rank::Three),
+        &Rank::Five     => Some(Rank::Four),
+        &Rank::Six      => Some(Rank::Five),
+        &Rank::Seven    => Some(Rank::Six),
+        &Rank::Eight    => Some(Rank::Seven),
+        &Rank::Nine     => Some(Rank::Eight),
+        &Rank::Ten      => Some(Rank::Nine),
+        &Rank::Jack     => Some(Rank::Ten),
+        &Rank::Queen    => Some(Rank::Jack),
+        &Rank::King     => Some(Rank::Queen)
     }
 }
