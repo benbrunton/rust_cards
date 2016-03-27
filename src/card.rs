@@ -179,7 +179,7 @@ impl Stack {
         if self.0.len() <= n {
             None
         }else{
-            Some(self.0[self.0.len() - 1].clone())
+            Some(self.0[n].clone())
         }
     }
     

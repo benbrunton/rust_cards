@@ -106,17 +106,33 @@ impl Game{
         println!("\t[{}]\t[{}]\t[{}]\t[{}]\t[{}]\t[{}]\t[{}]", stacks[0], stacks[1], stacks[2], stacks[3],
             stacks[4], stacks[5], stacks[6]);
             
-            
-        let stacks = &self.open_tableau.iter().map(|stack|
-            if let Some(card) = stack.show(0){
-                card.to_string()
-            }else{
-                "  ".to_string()
-            }
-        ).collect::<Vec<String>>();
-        // cards
-        println!("\t{}\t{}\t{}\t{}\t{}\t{}\t{}", stacks[0], stacks[1], stacks[2],
-            stacks[3], stacks[4], stacks[5], stacks[6]);
+        
+        let mut longest_stack = 0;
+        let mut stack_iter = 0;
+        
+        for stack in &self.open_tableau{
+            longest_stack = cmp::max(stack.count(), longest_stack);
+        }
+        
+        
+        while stack_iter < longest_stack {
+            let stacks = &self.open_tableau.iter().map(|stack|
+                
+                if let Some(card) = stack.show(stack_iter){
+                    card.to_string()
+                }else{
+                    "  ".to_string()
+                }
+                
+            ).collect::<Vec<String>>();
+            // cards
+            println!("\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t\t:{}", stacks[0], stacks[1], stacks[2],
+                stacks[3], stacks[4], stacks[5], stacks[6], stack_iter);
+                
+            stack_iter = stack_iter + 1;
+        }
+        
+        
             
             
         println!("\n");
@@ -137,6 +153,10 @@ impl Game{
     }
     
     pub fn move_card(&mut self, source:&str, target:&str){
+    
+        // todo - move king to empty space
+        // todo - move stacks of cards
+        // todo - move suits up to targets
         
         println!("Checking move {} to {}", source, target);
         
@@ -165,7 +185,10 @@ impl Game{
                 if let Some(source_card) = source_stack.show(source_stack.count() - 1){
                     if source_card.colour == target_card.alternate_colour() && source_card.rank == previous_rank {
                         let card = source_stack.take(1);
+                        println!("moving {}", card[0]);
+                        println!("{:?}", target_stack);
                         target_stack.add_to_top(card);
+                        println!("{:?}", target_stack);
                         
                         match &*target {
                             "a" => {self.target[0] = target_stack;},
@@ -195,6 +218,7 @@ impl Game{
                             _   => {}
                         }
                         
+                        println!("{:?}", self.open_tableau);
                     }
                 }
             }
