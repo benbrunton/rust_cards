@@ -1,4 +1,6 @@
 
+use std::cmp;
+
 use colored::*;
 use card::*;
 
@@ -122,8 +124,15 @@ impl Game{
     
     pub fn deal(&mut self){
         self.round = self.round + 1;
+        let take = cmp::min(3, self.deck.count()); 
         
-        let card = self.deck.take(3);
-        self.stack.add_to_top(card);
+        if take > 0 {
+            let card = self.deck.take(take);
+            self.stack.add_to_top(card);
+        } else {
+            let count = self.stack.count();
+            let cards = self.stack.take(count);
+            self.deck.add_to_top(cards);
+        }
     }
 }

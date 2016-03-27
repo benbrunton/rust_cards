@@ -123,6 +123,16 @@ impl Deck {
         
         temp_stack
     }
+    
+    pub fn count(&self) -> usize {
+        self.0.len()
+    }
+    
+    pub fn add_to_top(&mut self, cards: Vec<Card>){
+        for card in cards.iter() {
+            self.0.push(card.clone());
+        }
+    }
 }
  
 impl fmt::Display for Deck {
@@ -141,6 +151,7 @@ impl Stack {
     pub fn new() -> Stack{
         Stack(Vec::new())
     }
+
     pub fn count(&self) -> usize {
         self.0.len()
     }
