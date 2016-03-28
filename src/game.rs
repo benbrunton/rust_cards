@@ -61,6 +61,10 @@ impl Game{
         self.display_board();
     }
     
+    pub fn check_win(&self) -> bool{
+        self.target.iter().all(|stack| stack.count() == 13)
+    }
+    
     pub fn display_board(&self){
         // deck
         let deck = "?".blue();

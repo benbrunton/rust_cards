@@ -18,7 +18,14 @@ fn main() {
     game.start();
     
     while next_round(&mut game){
-        game.display_board();
+    
+        if game.check_win() {
+            show_win_message();
+            
+            game = Game::new();
+        } else {
+            game.display_board();
+        }
     }
 
 }
@@ -34,6 +41,10 @@ fn next_round(game:&mut Game) -> bool{
         Ok(_) => process_move(input, game),
         Err(error) => {println!("error: {:?}", error); false}
     }
+}
+
+fn show_win_message(){
+    println!("\n\n\nYou completed the game!\n\nWell done!!!\n\n");
 }
 
 fn show_instructions() {
