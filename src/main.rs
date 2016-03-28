@@ -65,6 +65,10 @@ fn process_move(input:String, game:&mut Game) -> bool{
 
     match &*input {
         "q\n"   => false,
+        "r\n"   => {
+            main();
+            false
+        },
         "h\n"   => {
             game.deal();
             true

@@ -281,14 +281,23 @@ impl Game{
                     
                     },
                     None => { 
-                        let source_card = source_stack.show(source_stack.count() - 1).unwrap_or(Card::new(Rank::Ace, Suit::Spades));
-                        if source_card.rank == Rank::King {
-                            let card = source_stack.take(1);
-                            target_stack.add_to_top(card);
-                            true
-                        }else {
-                            false
+                    
+                        let mut n = 1;
+                        let mut moved = false;
+                        
+                        while n <= source_stack.count() {
+                            let source_card = source_stack.show(source_stack.count() - n).unwrap_or(Card::new(Rank::Ace, Suit::Spades));
+                            if source_card.rank == Rank::King {
+                                let mut card = source_stack.take(n);
+                                card.reverse();
+                                target_stack.add_to_top(card);
+                                moved = true;
+                                break;
+                            }
+                            n = n + 1;
                         }
+                        
+                        moved
                     }
                 }
             },
