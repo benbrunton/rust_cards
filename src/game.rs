@@ -172,6 +172,10 @@ impl Game{
             Some(source_stack)  => source_stack,
             None                => empty_source_stack
         };
+        
+        
+        // -- returning here if moving from empty stack
+        if source_stack.count() < 1 { return; }
 
 
 
@@ -228,17 +232,49 @@ impl Game{
             
                         let previous_rank = target_card.previous_rank().unwrap_or(Rank::Ace);
                             
-                        if let Some(source_card) = source_stack.show(source_stack.count() - 1){
+                        
+                        //
+                        // todo - this is where we need to check for moving stacks of cards
+                        //
+                    
+                        let mut n = 1;
+                        let mut moved = false;
+                        
+                        while n <= source_stack.count() {
+                            let source_card = source_stack.show(source_stack.count() - n).unwrap();
                             if source_card.colour == target_card.alternate_colour() && source_card.rank == previous_rank {
-                                let card = source_stack.take(1);
+                                let mut card = source_stack.take(n);
+                                card.reverse();
                                 target_stack.add_to_top(card);
-                                true
-                            }else {
-                                false
+                                moved = true;
+                                break;
                             }
-                        }else{
-                            false
+                            n = n + 1;
                         }
+                        
+                        moved
+                        
+                        // if let Some(source_card) = source_stack.show(source_stack.count() - 1){
+                        
+                            
+                            
+                        //     if source_card.colour == target_card.alternate_colour() && source_card.rank == previous_rank {
+                        //         let card = source_stack.take(1);
+                        //         target_stack.add_to_top(card);
+                        //         true
+                        //     }else {
+                        //         false
+                        //     }
+                            
+                            
+                        // }else{
+                        //     false
+                        // }
+                        
+                        //
+                        // end todo
+                        //
+                    
                     },
                     None => { 
                         let source_card = source_stack.show(source_stack.count() - 1).unwrap_or(Card::new(Rank::Ace, Suit::Spades));
@@ -288,12 +324,38 @@ impl Game{
                 "7" => {self.open_tableau[6] = source_stack;},
                 _   => {}
             }
+            
+            self.round = self.round + 1;
         }
 
     }
     
     pub fn deal_stack(&mut self, source:&str){
         println!("Checking stack {}", source);
+        match self.get_source_stack(source) {
+            Some(source_stack) => {
+                let mut stack = source_stack.clone();
+                if stack.count() == 0 {
+                    let mut deck = self.get_source_deck(source).unwrap();
+                    if deck.count() > 0 {
+                        let card = deck.take(1);
+                        stack.add_to_top(card);
+                        
+                        match &*source {
+                            "1" => {self.open_tableau[0] = stack; self.tableau[0] = deck;},
+                            "2" => {self.open_tableau[1] = stack; self.tableau[1] = deck;},
+                            "3" => {self.open_tableau[2] = stack; self.tableau[2] = deck;},
+                            "4" => {self.open_tableau[3] = stack; self.tableau[3] = deck;},
+                            "5" => {self.open_tableau[4] = stack; self.tableau[4] = deck;},
+                            "6" => {self.open_tableau[5] = stack; self.tableau[5] = deck;},
+                            "7" => {self.open_tableau[6] = stack; self.tableau[6] = deck;},
+                            _   => ()
+                        }
+                    }
+                }
+            },
+            None => ()
+        }
     }
     
     fn get_target_stack(&self, target:&str)->Option<Stack>{
@@ -329,6 +391,23 @@ impl Game{
             "5" => Some(open_tableau[4].clone()),
             "6" => Some(open_tableau[5].clone()),
             "7" => Some(open_tableau[6].clone()),
+            _   => None
+        }
+    }
+    
+    // need better naming but this is the pile of hidden cards that we can
+    // pick from
+    fn get_source_deck(&self, source:&str)->Option<Stack>{
+        let tableau = &self.tableau;
+        
+        match &*source {
+            "1" => Some(tableau[0].clone()),
+            "2" => Some(tableau[1].clone()),
+            "3" => Some(tableau[2].clone()),
+            "4" => Some(tableau[3].clone()),
+            "5" => Some(tableau[4].clone()),
+            "6" => Some(tableau[5].clone()),
+            "7" => Some(tableau[6].clone()),
             _   => None
         }
     }
