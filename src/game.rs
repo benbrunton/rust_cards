@@ -175,45 +175,118 @@ impl Game{
 
 
 
-        // todo - clean this horrible shit up
-        if let Some(target_card) = target_stack.show(target_stack.count() - 1) {
+        // 1 - target is open_tableau then needs to be alternate colour and smaller card
+        // OR - a King
         
-            if let Some(previous_rank) = target_card.previous_rank() {
+        // 2 - target is a target stack so card needs to be same suit and higher card
+        // OR an ace
+        
+        // index of target stack card
+        let n = if target_stack.count() > 1 {
+            target_stack.count() - 1
+        } else {
+            0
+        };
+
+        let do_move = match target.chars().next().unwrap() {
+            'a' ... 'd'  => {
+                match target_stack.show(n) {
                 
-                if let Some(source_card) = source_stack.show(source_stack.count() - 1){
-                    if source_card.colour == target_card.alternate_colour() && source_card.rank == previous_rank {
-                        let card = source_stack.take(1);
-                        target_stack.add_to_top(card);
-                        
-                        match &*target {
-                            "a" => {self.target[0] = target_stack;},
-                            "b" => {self.target[1] = target_stack;},
-                            "c" => {self.target[2] = target_stack;},
-                            "d" => {self.target[3] = target_stack;},
-                            "1" => {self.open_tableau[0] = target_stack;},
-                            "2" => {self.open_tableau[1] = target_stack;},
-                            "3" => {self.open_tableau[2] = target_stack;},
-                            "4" => {self.open_tableau[3] = target_stack;},
-                            "5" => {self.open_tableau[4] = target_stack;},
-                            "6" => {self.open_tableau[5] = target_stack;},
-                            "7" => {self.open_tableau[6] = target_stack;},
-                            _   => {}
+                    Some(target_card) => {
+                        let next_rank = target_card.next_rank().unwrap_or(Rank::King);
+                            
+                        if let Some(source_card) = source_stack.show(source_stack.count() - 1){
+                            if source_card.suit == target_card.suit && source_card.rank == next_rank {
+                                let card = source_stack.take(1);
+                                target_stack.add_to_top(card);
+                                true
+                            }else {
+                                false
+                            }
+                        }else{
+                            false
                         }
-                        
-                        
-                        match &*source {
-                            "s" => {self.stack = source_stack;},
-                            "1" => {self.open_tableau[0] = source_stack;},
-                            "2" => {self.open_tableau[1] = source_stack;},
-                            "3" => {self.open_tableau[2] = source_stack;},
-                            "4" => {self.open_tableau[3] = source_stack;},
-                            "5" => {self.open_tableau[4] = source_stack;},
-                            "6" => {self.open_tableau[5] = source_stack;},
-                            "7" => {self.open_tableau[6] = source_stack;},
-                            _   => {}
+                    },
+                    
+                    None => {
+                        let source_card = source_stack.show(source_stack.count() - 1).unwrap_or(Card::new(Rank::King, Suit::Spades));
+                        if source_card.rank == Rank::Ace {
+                            let card = source_stack.take(1);
+                            target_stack.add_to_top(card);
+                            true
+                        }else {
+                            false
                         }
                     }
                 }
+            },
+            '1' ... '7' => {
+                
+                match target_stack.show(n) {
+        
+                    Some(target_card) => {
+            
+                        let previous_rank = target_card.previous_rank().unwrap_or(Rank::Ace);
+                            
+                        if let Some(source_card) = source_stack.show(source_stack.count() - 1){
+                            if source_card.colour == target_card.alternate_colour() && source_card.rank == previous_rank {
+                                let card = source_stack.take(1);
+                                target_stack.add_to_top(card);
+                                true
+                            }else {
+                                false
+                            }
+                        }else{
+                            false
+                        }
+                    },
+                    None => { 
+                        let source_card = source_stack.show(source_stack.count() - 1).unwrap_or(Card::new(Rank::Ace, Suit::Spades));
+                        if source_card.rank == Rank::King {
+                            let card = source_stack.take(1);
+                            target_stack.add_to_top(card);
+                            true
+                        }else {
+                            false
+                        }
+                    }
+                }
+            },
+            _           => {false}
+        };
+
+        
+        
+        
+        // replace new source and target with modified stacks
+        if do_move {
+        
+            match &*target {
+                "a" => {self.target[0] = target_stack;},
+                "b" => {self.target[1] = target_stack;},
+                "c" => {self.target[2] = target_stack;},
+                "d" => {self.target[3] = target_stack;},
+                "1" => {self.open_tableau[0] = target_stack;},
+                "2" => {self.open_tableau[1] = target_stack;},
+                "3" => {self.open_tableau[2] = target_stack;},
+                "4" => {self.open_tableau[3] = target_stack;},
+                "5" => {self.open_tableau[4] = target_stack;},
+                "6" => {self.open_tableau[5] = target_stack;},
+                "7" => {self.open_tableau[6] = target_stack;},
+                _   => {}
+            }
+            
+            
+            match &*source {
+                "s" => {self.stack = source_stack;},
+                "1" => {self.open_tableau[0] = source_stack;},
+                "2" => {self.open_tableau[1] = source_stack;},
+                "3" => {self.open_tableau[2] = source_stack;},
+                "4" => {self.open_tableau[3] = source_stack;},
+                "5" => {self.open_tableau[4] = source_stack;},
+                "6" => {self.open_tableau[5] = source_stack;},
+                "7" => {self.open_tableau[6] = source_stack;},
+                _   => {}
             }
         }
 

@@ -67,15 +67,18 @@ impl Card {
 
     pub fn new(rank: Rank, suit: Suit) -> Card {
         let colour = match suit {
-            Suit::Diamonds  => Colour::Red,
-            Suit::Hearts    => Colour::Red,
-            _               => Colour::Black
+            Suit::Diamonds | Suit::Hearts   => Colour::Red,
+            _                               => Colour::Black
         };
         Card{suit: suit, rank: rank, colour: colour}
     }
     
     pub fn previous_rank(&self) -> Option<Rank>{
         previous_rank(&self.rank)
+    }
+    
+    pub fn next_rank(&self) -> Option<Rank>{
+        next_rank(&self.rank)
     }
     
     pub fn alternate_colour(&self) -> Colour{
@@ -215,5 +218,23 @@ fn previous_rank(rank:&Rank) -> Option<Rank> {
         &Rank::Jack     => Some(Rank::Ten),
         &Rank::Queen    => Some(Rank::Jack),
         &Rank::King     => Some(Rank::Queen)
+    }
+}
+
+fn next_rank(rank:&Rank) -> Option<Rank> {
+    match rank {
+        &Rank::Ace      => Some(Rank::Two),
+        &Rank::Two      => Some(Rank::Three),
+        &Rank::Three    => Some(Rank::Four),
+        &Rank::Four     => Some(Rank::Five),
+        &Rank::Five     => Some(Rank::Six),
+        &Rank::Six      => Some(Rank::Seven),
+        &Rank::Seven    => Some(Rank::Eight),
+        &Rank::Eight    => Some(Rank::Nine),
+        &Rank::Nine     => Some(Rank::Ten),
+        &Rank::Ten      => Some(Rank::Jack),
+        &Rank::Jack     => Some(Rank::Queen),
+        &Rank::Queen    => Some(Rank::King),
+        &Rank::King     => None
     }
 }
