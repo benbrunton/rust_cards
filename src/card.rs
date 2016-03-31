@@ -3,7 +3,7 @@ use colored::*;
 use rand;
 use rand::Rng;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Copy)]
 pub enum Suit{
     Diamonds,
     Clubs,
@@ -23,40 +23,40 @@ impl fmt::Display for Suit{
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Copy)]
 pub enum Colour{
     Red,
     Black
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Copy)]
 pub enum Rank{
     Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King
 }
 
 impl fmt::Display for Rank{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let display = match self {
-            &Rank::Ace      => "A",
-            &Rank::Two      => "2",
-            &Rank::Three    => "3",
-            &Rank::Four     => "4",
-            &Rank::Five     => "5",
-            &Rank::Six      => "6",
-            &Rank::Seven    => "7",
-            &Rank::Eight    => "8",
-            &Rank::Nine     => "9",
-            &Rank::Ten      => "10",
-            &Rank::Jack     => "J",
-            &Rank::Queen    => "Q",
-            &Rank::King     => "K",
+        let display = match *self {
+            Rank::Ace      => "A",
+            Rank::Two      => "2",
+            Rank::Three    => "3",
+            Rank::Four     => "4",
+            Rank::Five     => "5",
+            Rank::Six      => "6",
+            Rank::Seven    => "7",
+            Rank::Eight    => "8",
+            Rank::Nine     => "9",
+            Rank::Ten      => "10",
+            Rank::Jack     => "J",
+            Rank::Queen    => "Q",
+            Rank::King     => "K",
         };
         write!(f, "{}", display)
     }
 }
 
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Copy)]
 pub struct Card{
     pub rank: Rank,
     pub suit: Suit,
@@ -92,7 +92,7 @@ impl Card {
 
 impl fmt::Display for Card {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let card = self.suit.to_string() + &self.rank.to_string();
+        let card = format!("{}{}", self.suit, self.rank);
         let decorated_card = if self.colour == Colour::Red {
             card.red()
         } else {
@@ -144,7 +144,7 @@ impl Deck {
     }
     
     pub fn add_to_top(&mut self, cards: Vec<Card>){
-        for card in cards.iter() {
+        for card in cards {
             self.0.push(card.clone());
         }
     }
@@ -204,37 +204,37 @@ impl Stack {
 }
 
 fn previous_rank(rank:&Rank) -> Option<Rank> {
-    match rank {
-        &Rank::Ace      => None,
-        &Rank::Two      => Some(Rank::Ace),
-        &Rank::Three    => Some(Rank::Two),
-        &Rank::Four     => Some(Rank::Three),
-        &Rank::Five     => Some(Rank::Four),
-        &Rank::Six      => Some(Rank::Five),
-        &Rank::Seven    => Some(Rank::Six),
-        &Rank::Eight    => Some(Rank::Seven),
-        &Rank::Nine     => Some(Rank::Eight),
-        &Rank::Ten      => Some(Rank::Nine),
-        &Rank::Jack     => Some(Rank::Ten),
-        &Rank::Queen    => Some(Rank::Jack),
-        &Rank::King     => Some(Rank::Queen)
+    match *rank {
+        Rank::Ace      => None,
+        Rank::Two      => Some(Rank::Ace),
+        Rank::Three    => Some(Rank::Two),
+        Rank::Four     => Some(Rank::Three),
+        Rank::Five     => Some(Rank::Four),
+        Rank::Six      => Some(Rank::Five),
+        Rank::Seven    => Some(Rank::Six),
+        Rank::Eight    => Some(Rank::Seven),
+        Rank::Nine     => Some(Rank::Eight),
+        Rank::Ten      => Some(Rank::Nine),
+        Rank::Jack     => Some(Rank::Ten),
+        Rank::Queen    => Some(Rank::Jack),
+        Rank::King     => Some(Rank::Queen)
     }
 }
 
 fn next_rank(rank:&Rank) -> Option<Rank> {
-    match rank {
-        &Rank::Ace      => Some(Rank::Two),
-        &Rank::Two      => Some(Rank::Three),
-        &Rank::Three    => Some(Rank::Four),
-        &Rank::Four     => Some(Rank::Five),
-        &Rank::Five     => Some(Rank::Six),
-        &Rank::Six      => Some(Rank::Seven),
-        &Rank::Seven    => Some(Rank::Eight),
-        &Rank::Eight    => Some(Rank::Nine),
-        &Rank::Nine     => Some(Rank::Ten),
-        &Rank::Ten      => Some(Rank::Jack),
-        &Rank::Jack     => Some(Rank::Queen),
-        &Rank::Queen    => Some(Rank::King),
-        &Rank::King     => None
+    match *rank {
+        Rank::Ace      => Some(Rank::Two),
+        Rank::Two      => Some(Rank::Three),
+        Rank::Three    => Some(Rank::Four),
+        Rank::Four     => Some(Rank::Five),
+        Rank::Five     => Some(Rank::Six),
+        Rank::Six      => Some(Rank::Seven),
+        Rank::Seven    => Some(Rank::Eight),
+        Rank::Eight    => Some(Rank::Nine),
+        Rank::Nine     => Some(Rank::Ten),
+        Rank::Ten      => Some(Rank::Jack),
+        Rank::Jack     => Some(Rank::Queen),
+        Rank::Queen    => Some(Rank::King),
+        Rank::King     => None
     }
 }

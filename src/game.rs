@@ -257,27 +257,7 @@ impl Game{
                         }
                         
                         moved
-                        
-                        // if let Some(source_card) = source_stack.show(source_stack.count() - 1){
-                        
-                            
-                            
-                        //     if source_card.colour == target_card.alternate_colour() && source_card.rank == previous_rank {
-                        //         let card = source_stack.take(1);
-                        //         target_stack.add_to_top(card);
-                        //         true
-                        //     }else {
-                        //         false
-                        //     }
-                            
-                            
-                        // }else{
-                        //     false
-                        // }
-                        
-                        //
-                        // end todo
-                        //
+
                     
                     },
                     None => { 
