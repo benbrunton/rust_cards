@@ -153,7 +153,7 @@ impl Deck {
 impl fmt::Display for Deck {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for card in self.0.iter() {
-            writeln!(f, "{}", card);
+            let _ = writeln!(f, "{}", card);
         }
         write!(f, "")
     }
