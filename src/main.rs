@@ -75,13 +75,13 @@ fn process_move(input:String, game:&mut Game) -> bool{
         },
         x if move_re.is_match(x) => {
             for cap in move_re.captures_iter(x) {
-                game.move_card(cap.at(1).unwrap(), cap.at(2).unwrap());
+                game.move_card(cap.get(1).unwrap().as_str(), cap.get(2).unwrap().as_str());
             }
             true
         },
         x if deal_re.is_match(x) => {
             for cap in deal_re.captures_iter(x) {
-                game.deal_stack(cap.at(1).unwrap());
+                game.deal_stack(cap.get(1).unwrap().as_str());
             }
             true
         },
