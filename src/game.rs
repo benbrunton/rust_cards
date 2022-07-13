@@ -197,7 +197,7 @@ impl Game{
         };
 
         let do_move = match target.chars().next().unwrap() {
-            'a' ... 'd'  => {
+            'a' ..= 'd'  => {
                 match target_stack.show(n) {
                 
                     Some(target_card) => {
@@ -228,7 +228,7 @@ impl Game{
                     }
                 }
             },
-            '1' ... '7' => {
+            '1' ..= '7' => {
                 
                 match target_stack.show(n) {
         
