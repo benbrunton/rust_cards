@@ -6,4 +6,4 @@ authors = ["Ben Brunton <benbrunton@hotmail.com>"]
 [dependencies]
 colored = "1.1"
 rand = "0.3"
-regex = "0.1"
+regex = "1.5"
